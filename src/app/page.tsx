@@ -1,7 +1,8 @@
-import { createListAction, getUserLists } from './actions/listActions';
+import { getUserLists } from './actions/listActions';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import Link from 'next/link';
+import CreateListForm from '@/components/CreateListForm';
 import { Gift, HeartHandshake, Share2, Sparkles, ShieldCheck, LogIn, UserPlus, ListOrdered, ArrowRight } from 'lucide-react';
 
 export default async function HomePage() {
@@ -50,18 +51,31 @@ export default async function HomePage() {
               return (
                 <div
                   key={list.id}
-                  className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 shadow-xs hover:border-indigo-300 transition"
+                  className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 shadow-xs hover:border-indigo-300 transition gap-3"
                 >
-                  <div>
-                    <h4 className="font-semibold text-slate-800 text-sm">{list.title}</h4>
-                    <span className="text-xs text-slate-500">
-                      {reservedCount} de {list.items.length} presentes reservados
-                    </span>
+                  <div className="flex items-center gap-3 overflow-hidden">
+                    {list.bannerUrl ? (
+                      <img
+                        src={list.bannerUrl}
+                        alt={list.title}
+                        className="w-10 h-10 rounded-lg object-cover flex-shrink-0 border border-slate-200"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0">
+                        <Gift className="w-5 h-5" />
+                      </div>
+                    )}
+                    <div className="truncate">
+                      <h4 className="font-semibold text-slate-800 text-sm truncate">{list.title}</h4>
+                      <span className="text-xs text-slate-500 block">
+                        {reservedCount} de {list.items.length} presentes reservados
+                      </span>
+                    </div>
                   </div>
 
                   <Link
                     href={`/lista/${list.slug}`}
-                    className="px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-semibold hover:bg-indigo-100 transition"
+                    className="px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-semibold hover:bg-indigo-100 transition flex-shrink-0"
                   >
                     Abrir
                   </Link>
@@ -80,49 +94,7 @@ export default async function HomePage() {
         </h2>
 
         {session?.user ? (
-          <form action={createListAction} className="space-y-6">
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium text-slate-700 mb-2">
-                Título da Lista <span className="text-indigo-600">*</span>
-              </label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                required
-                placeholder="Ex: Enxoval da Casa Nova de João e Maria"
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-slate-700 mb-2">
-                Descrição ou Mensagem aos Convidados (Opcional)
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                rows={3}
-                placeholder="Ex: Olá família e amigos! Preparamos esta lista com carinho para nossa nova fase. Fiquem à vontade!"
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition resize-none"
-              />
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-800 text-xs flex items-center gap-2.5">
-              <ShieldCheck className="w-4 h-4 text-indigo-600 flex-shrink-0" />
-              <span>
-                Criando como <strong className="text-slate-900 font-bold">{session.user.name || session.user.email}</strong>. Apenas você terá permissão para adicionar e gerenciar itens nesta lista.
-              </span>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-4 px-6 rounded-xl font-semibold text-white gradient-btn flex items-center justify-center gap-2 text-lg shadow-lg hover:shadow-indigo-500/25 transition cursor-pointer"
-            >
-              <Sparkles className="w-5 h-5" />
-              Criar Minha Lista Agora
-            </button>
-          </form>
+          <CreateListForm userName={session.user.name || session.user.email || 'Usuário'} />
         ) : (
           <div className="text-center py-6 space-y-6">
             <div className="w-16 h-16 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto border border-indigo-200">

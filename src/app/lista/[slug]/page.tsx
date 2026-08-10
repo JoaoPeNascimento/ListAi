@@ -62,41 +62,53 @@ export default async function ListPage({ params }: PageProps) {
       </div>
 
       {/* List Header Banner */}
-      <div className="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200/90 space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-medium border border-indigo-200">
-                <Gift className="w-3.5 h-3.5 text-indigo-600" />
-                <span>Lista Compartilhável</span>
+      <div className="glass-card rounded-3xl overflow-hidden border border-slate-200/90 shadow-md">
+        {list.bannerUrl && (
+          <div className="relative w-full h-48 sm:h-64 overflow-hidden border-b border-slate-200">
+            <img
+              src={list.bannerUrl}
+              alt={list.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/15 to-transparent" />
+          </div>
+        )}
+
+        <div className="p-6 sm:p-8 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-medium border border-indigo-200">
+                  <Gift className="w-3.5 h-3.5 text-indigo-600" />
+                  <span>Lista Compartilhável</span>
+                </div>
+
+                {isOwner && (
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-medium border border-emerald-200">
+                    <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Você é o criador desta lista</span>
+                  </div>
+                )}
               </div>
 
-              {isOwner && (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-medium border border-emerald-200">
-                  <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Você é o criador desta lista</span>
-                </div>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                {list.title}
+              </h1>
+
+              {list.description && (
+                <p className="text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed">
+                  {list.description}
+                </p>
               )}
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              {list.title}
-            </h1>
-
-            {list.description && (
-              <p className="text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed">
-                {list.description}
-              </p>
+            {/* Add Item Modal (Only visible if current user is Owner) */}
+            {isOwner && (
+              <div className="flex-shrink-0">
+                <AddItemModal listId={list.id} listSlug={list.slug} />
+              </div>
             )}
           </div>
-
-          {/* Add Item Modal (Only visible if current user is Owner) */}
-          {isOwner && (
-            <div className="flex-shrink-0">
-              <AddItemModal listId={list.id} listSlug={list.slug} />
-            </div>
-          )}
-        </div>
 
         {/* Progress Bar Container */}
         {totalItems > 0 && (
@@ -119,6 +131,7 @@ export default async function ListPage({ params }: PageProps) {
             </div>
           </div>
         )}
+      </div>
       </div>
 
       {/* Main Items Container */}

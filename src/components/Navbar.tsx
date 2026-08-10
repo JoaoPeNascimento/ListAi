@@ -14,7 +14,7 @@ export default function Navbar() {
           <div className="w-8 h-8 rounded-lg gradient-btn flex items-center justify-center text-white shadow-md">
             <Gift className="w-5 h-5" />
           </div>
-          <span className="text-base sm:text-lg tracking-tight font-extrabold text-slate-800">ListaCasa</span>
+          <span className="text-base sm:text-lg tracking-tight font-extrabold text-slate-800">ListaAí</span>
         </Link>
 
         <div className="flex items-center gap-3">

@@ -4,7 +4,7 @@ import Providers from '@/components/Providers';
 import Navbar from '@/components/Navbar';
 
 export const metadata: Metadata = {
-  title: 'Lista de Presentes & Casa Nova',
+  title: 'ListAí',
   description: 'Gerenciador de listas de presentes compartilháveis por link com reservas em tempo real.',
 };
 

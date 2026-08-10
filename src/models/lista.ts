@@ -6,6 +6,7 @@ export interface Lista {
   slug: string;
   title: string;
   description: string | null;
+  bannerUrl?: string | null;
   ownerId: string | null;
   createdAt: Date | string;
   updatedAt: Date | string;
@@ -23,5 +24,6 @@ export interface ListaSummary extends Lista {
 export interface ListaCreateInput {
   title: string;
   description?: string | null;
+  bannerUrl?: string | null;
   ownerId?: string | null;
 }

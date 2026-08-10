@@ -1,6 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
+import { processImageUpload } from '@/lib/imageHandler';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
@@ -28,6 +29,8 @@ export async function createListAction(formData: FormData): Promise<void> {
 
   const title = formData.get('title') as string;
   const description = formData.get('description') as string;
+  const bannerUrl = formData.get('bannerUrl') as string;
+  const bannerFile = formData.get('bannerFile') as File | null;
 
   if (!title || title.trim() === '') {
     return;
@@ -45,10 +48,13 @@ export async function createListAction(formData: FormData): Promise<void> {
     redirect('/login');
   }
 
+  const finalBanner = await processImageUpload(bannerUrl, bannerFile);
+
   await prisma.list.create({
     data: {
       title: title.trim(),
       description: description?.trim() || null,
+      bannerUrl: finalBanner,
       ownerId: userId,
       slug,
     },
