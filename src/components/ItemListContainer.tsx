@@ -5,15 +5,7 @@ import ReserveModal from './ReserveModal';
 import { deleteItemAction } from '@/app/actions/itemActions';
 import { ExternalLink, Trash2, Tag, Gift, CheckCircle, Package } from 'lucide-react';
 
-interface Item {
-  id: string;
-  titulo: string;
-  link: string | null;
-  valorEstimado: number | null;
-  imagem: string | null;
-  reservado: boolean;
-  reservadoPor: string | null;
-}
+import { Item } from '@/models';
 
 interface ItemListContainerProps {
   items: Item[];

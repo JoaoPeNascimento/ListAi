@@ -39,7 +39,7 @@ export default async function ListPage({ params }: PageProps) {
     );
   }
 
-  const userId = session?.user ? (session.user as any).id : null;
+  const userId = session?.user?.id || null;
   const isOwner = !!(userId && list.ownerId && userId === list.ownerId);
 
   const totalItems = list.items.length;

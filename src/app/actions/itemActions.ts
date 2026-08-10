@@ -5,10 +5,16 @@ import { processImageUpload } from '@/lib/imageHandler';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
+import { ActionResult } from '@/models';
 
-async function verifyListOwner(listId: string): Promise<{ isOwner: boolean; list: any }> {
+interface OwnerCheckResult {
+  isOwner: boolean;
+  list: { id: string; ownerId: string | null; slug: string } | null;
+}
+
+async function verifyListOwner(listId: string): Promise<OwnerCheckResult> {
   const session = await getServerSession(authOptions);
-  const userId = session?.user ? (session.user as any).id : null;
+  const userId = session?.user?.id || null;
 
   const list = await prisma.list.findUnique({
     where: { id: listId },
@@ -24,7 +30,7 @@ async function verifyListOwner(listId: string): Promise<{ isOwner: boolean; list
   return { isOwner, list };
 }
 
-export async function addItemAction(formData: FormData) {
+export async function addItemAction(formData: FormData): Promise<ActionResult> {
   const listId = formData.get('listId') as string;
   const listSlug = formData.get('listSlug') as string;
   const titulo = formData.get('titulo') as string;
@@ -71,7 +77,11 @@ export async function addItemAction(formData: FormData) {
 /**
  * Public action for guests to reserve an item
  */
-export async function reserveItemAction(itemId: string, reservadoPor: string, listSlug: string) {
+export async function reserveItemAction(
+  itemId: string,
+  reservadoPor: string,
+  listSlug: string
+): Promise<ActionResult> {
   if (!itemId || !reservadoPor || reservadoPor.trim() === '') {
     return { error: 'Por favor, informe seu nome para confirmar a reserva.' };
   }
@@ -100,7 +110,7 @@ export async function reserveItemAction(itemId: string, reservadoPor: string, li
   }
 }
 
-export async function cancelReservationAction(itemId: string, listSlug: string) {
+export async function cancelReservationAction(itemId: string, listSlug: string): Promise<ActionResult> {
   try {
     await prisma.item.update({
       where: { id: itemId },
@@ -118,7 +128,7 @@ export async function cancelReservationAction(itemId: string, listSlug: string) 
   }
 }
 
-export async function deleteItemAction(itemId: string, listSlug: string) {
+export async function deleteItemAction(itemId: string, listSlug: string): Promise<ActionResult> {
   const item = await prisma.item.findUnique({
     where: { id: itemId },
     select: { listId: true },

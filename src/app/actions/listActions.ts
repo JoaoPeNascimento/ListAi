@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { ListaWithItems, ListaSummary, ActionResult } from '@/models';
 
 function generateSlug(title: string): string {
   const baseSlug = title
@@ -21,7 +22,7 @@ function generateSlug(title: string): string {
 export async function createListAction(formData: FormData): Promise<void> {
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.user || !(session.user as any).id) {
+  if (!session?.user?.id) {
     redirect('/login');
   }
 
@@ -33,7 +34,7 @@ export async function createListAction(formData: FormData): Promise<void> {
   }
 
   const slug = generateSlug(title);
-  const userId = (session.user as any).id;
+  const userId = session.user.id;
 
   const existingUser = await prisma.user.findUnique({
     where: { id: userId },
@@ -56,7 +57,7 @@ export async function createListAction(formData: FormData): Promise<void> {
   redirect(`/lista/${slug}`);
 }
 
-export async function getListBySlug(slug: string) {
+export async function getListBySlug(slug: string): Promise<ListaWithItems | null> {
   try {
     const list = await prisma.list.findUnique({
       where: { slug },
@@ -70,21 +71,21 @@ export async function getListBySlug(slug: string) {
       },
     });
 
-    return list;
+    return list as unknown as ListaWithItems | null;
   } catch (error) {
     console.error('Error fetching list:', error);
     return null;
   }
 }
 
-export async function getUserLists() {
+export async function getUserLists(): Promise<ListaSummary[]> {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || !session.user || !(session.user as any).id) {
+    if (!session?.user?.id) {
       return [];
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
 
     const lists = await prisma.list.findMany({
       where: { ownerId: userId },
@@ -99,21 +100,21 @@ export async function getUserLists() {
       orderBy: { createdAt: 'desc' },
     });
 
-    return lists;
+    return lists as unknown as ListaSummary[];
   } catch (error) {
     console.error('Error fetching user lists:', error);
     return [];
   }
 }
 
-export async function deleteListAction(listId: string) {
+export async function deleteListAction(listId: string): Promise<ActionResult> {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || !session.user || !(session.user as any).id) {
+    if (!session?.user?.id) {
       return { error: 'Não autorizado' };
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
 
     const list = await prisma.list.findUnique({
       where: { id: listId },
