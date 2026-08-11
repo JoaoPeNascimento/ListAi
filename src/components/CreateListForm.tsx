@@ -120,12 +120,12 @@ export default function CreateListForm({ userName }: CreateListFormProps) {
 
         {/* Live Preview */}
         {previewUrl && (
-          <div className="mt-3 relative w-full h-36 rounded-xl overflow-hidden border border-slate-200 bg-slate-100 flex items-center justify-center">
+          <div className="mt-3 relative w-full h-64 sm:h-80 rounded-xl overflow-hidden border border-slate-200 bg-slate-100 flex items-center justify-center">
             {/* eslint-disable-next-img-element */}
             <img
               src={previewUrl}
               alt="Pré-visualização do Banner"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover object-center"
               onError={() => setPreviewUrl(null)}
             />
             <div className="absolute bottom-2 left-2 px-2.5 py-1 rounded-md bg-slate-900/60 text-white text-[10px] font-medium backdrop-blur-xs">

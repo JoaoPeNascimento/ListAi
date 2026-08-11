@@ -64,11 +64,11 @@ export default async function ListPage({ params }: PageProps) {
       {/* List Header Banner */}
       <div className="glass-card rounded-3xl overflow-hidden border border-slate-200/90 shadow-md">
         {list.bannerUrl && (
-          <div className="relative w-full h-48 sm:h-64 overflow-hidden border-b border-slate-200">
+          <div className="relative w-full h-80 sm:h-[450px] md:h-[550px] lg:h-[620px] overflow-hidden border-b border-slate-200">
             <img
               src={list.bannerUrl}
               alt={list.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover object-center transition-all duration-300"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/15 to-transparent" />
           </div>

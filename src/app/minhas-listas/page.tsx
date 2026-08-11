@@ -84,11 +84,11 @@ export default async function MinhasListasPage() {
                 className="glass-card rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-indigo-300 transition flex flex-col justify-between overflow-hidden"
               >
                 {list.bannerUrl && (
-                  <div className="relative w-full h-32 overflow-hidden border-b border-slate-200">
+                  <div className="relative w-full h-52 sm:h-60 overflow-hidden border-b border-slate-200">
                     <img
                       src={list.bannerUrl}
                       alt={list.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover object-center"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
                   </div>
