@@ -1,0 +1,36 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH and Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT || 22 }}
+          script: |
+            # Navegar até a pasta do projeto na EC2
+            # Ajuste o caminho abaixo se a pasta do projeto estiver em outro local (ex: ~/lista-casa)
+            cd ~/lista-casa || cd /home/ubuntu/lista-casa
+            
+            # Puxar as últimas alterações do repositório
+            git pull origin main
+            
+            # Gerar o cliente do Prisma
+            npx prisma generate
+            
+            # Fazer o build com limite de memória ativado
+            NODE_OPTIONS="--max-old-space-size=2048" npm run build
+            
+            # Reiniciar a aplicação no PM2
+            pm2 restart lista-casa
