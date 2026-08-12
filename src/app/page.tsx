@@ -13,6 +13,11 @@ export default async function HomePage() {
     <main className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col justify-center items-center">
       {/* Header Banner */}
       <div className="text-center mb-10 space-y-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card text-indigo-700 text-sm font-semibold mb-2 border border-indigo-200 shadow-xs">
+          <Sparkles className="w-4 h-4 text-indigo-600" />
+          <span>Totalmente gratuito &amp; sem necessidade de login para convidados</span>
+        </div>
+
         <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900">
           Crie, Compartilhe e Gerencie sua <br />
           <span className="gradient-text">Lista de Presentes &amp; Casa Nova</span>
