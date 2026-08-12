@@ -37,3 +37,37 @@ export async function processImageUpload(
 
   return null;
 }
+
+export async function deleteLocalImage(imageUrl: string | null | undefined): Promise<void> {
+  if (!imageUrl || typeof imageUrl !== 'string') return;
+
+  try {
+    // Apenas tenta excluir imagens locais salvas na pasta uploads
+    if (!imageUrl.includes('/uploads/')) return;
+
+    let filename: string;
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      const parsedUrl = new URL(imageUrl);
+      filename = path.basename(parsedUrl.pathname);
+    } else {
+      filename = path.basename(imageUrl);
+    }
+
+    if (!filename) return;
+
+    const safeFilename = path.basename(filename);
+    const filePath = path.join(process.cwd(), 'public', 'uploads', safeFilename);
+
+    await fs.unlink(filePath);
+  } catch (error: unknown) {
+    const err = error as { code?: string };
+    if (err?.code !== 'ENOENT') {
+      console.error(`Error deleting local image (${imageUrl}):`, error);
+    }
+  }
+}
+
+export async function deleteLocalImages(imageUrls: (string | null | undefined)[]): Promise<void> {
+  await Promise.allSettled(imageUrls.map((url) => deleteLocalImage(url)));
+}
+

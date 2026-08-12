@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { processImageUpload } from '@/lib/imageHandler';
+import { processImageUpload, deleteLocalImage } from '@/lib/imageHandler';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
@@ -131,7 +131,7 @@ export async function cancelReservationAction(itemId: string, listSlug: string):
 export async function deleteItemAction(itemId: string, listSlug: string): Promise<ActionResult> {
   const item = await prisma.item.findUnique({
     where: { id: itemId },
-    select: { listId: true },
+    select: { listId: true, imagem: true },
   });
 
   if (!item) {
@@ -147,6 +147,8 @@ export async function deleteItemAction(itemId: string, listSlug: string): Promis
     await prisma.item.delete({
       where: { id: itemId },
     });
+
+    await deleteLocalImage(item.imagem);
 
     revalidatePath(`/lista/${listSlug}`);
     return { success: true };

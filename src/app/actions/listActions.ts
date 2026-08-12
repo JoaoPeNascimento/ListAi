@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { processImageUpload } from '@/lib/imageHandler';
+import { processImageUpload, deleteLocalImages } from '@/lib/imageHandler';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
@@ -124,7 +124,14 @@ export async function deleteListAction(listId: string): Promise<ActionResult> {
 
     const list = await prisma.list.findUnique({
       where: { id: listId },
-      select: { id: true, ownerId: true },
+      select: {
+        id: true,
+        ownerId: true,
+        bannerUrl: true,
+        items: {
+          select: { imagem: true },
+        },
+      },
     });
 
     if (!list || list.ownerId !== userId) {
@@ -134,6 +141,9 @@ export async function deleteListAction(listId: string): Promise<ActionResult> {
     await prisma.list.delete({
       where: { id: listId },
     });
+
+    const imagesToDelete = [list.bannerUrl, ...list.items.map((item) => item.imagem)];
+    await deleteLocalImages(imagesToDelete);
 
     revalidatePath('/minhas-listas');
     revalidatePath('/');
