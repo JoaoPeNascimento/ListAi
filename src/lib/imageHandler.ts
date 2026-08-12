@@ -23,7 +23,7 @@ export async function processImageUpload(
       const filePath = path.join(uploadsDir, filename);
 
       await fs.writeFile(filePath, buffer);
-      return `/uploads/${filename}`;
+      return `/api/uploads/${filename}`;
     } catch (error) {
       console.error('Error saving uploaded image:', error);
       // Fallback to imageUrl if upload fails

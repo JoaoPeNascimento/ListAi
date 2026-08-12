@@ -10,7 +10,11 @@ export async function GET(
 ) {
   const { filename } = await params;
 
-  // Prevent directory traversal
+  if (!filename) {
+    return new NextResponse('File name missing', { status: 400 });
+  }
+
+  // Prevent directory traversal attacks
   const safeFilename = path.basename(filename);
   const filePath = path.join(process.cwd(), 'public', 'uploads', safeFilename);
 
@@ -30,7 +34,8 @@ export async function GET(
         'Cache-Control': 'public, max-age=31536000, immutable',
       },
     });
-  } catch {
+  } catch (error) {
+    console.error(`Upload error: file ${safeFilename} not found`, error);
     return new NextResponse('File not found', { status: 404 });
   }
 }
