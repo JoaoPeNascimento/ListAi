@@ -21,7 +21,8 @@ jobs:
           script: |
             # Navegar até a pasta do projeto na EC2
             # Ajuste o caminho abaixo se a pasta do projeto estiver em outro local (ex: ~/lista-casa)
-            cd ~/lista-casa || cd /home/ubuntu/lista-casa
+            cd ~/project || cd /home/ubuntu/project
+            cd ~/ListAi
             
             # Puxar as últimas alterações do repositório
             git pull origin main
