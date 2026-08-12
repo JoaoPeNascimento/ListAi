@@ -19,7 +19,7 @@ export default async function HomePage() {
         </div>
 
         <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900">
-          Crie e Compartilhe sua <br />
+          Crie, Compartilhe e Gerencie sua <br />
           <span className="gradient-text">Lista de Presentes &amp; Casa Nova</span>
         </h1>
 
